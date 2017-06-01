@@ -1,0 +1,148 @@
+/* M2C Modula-2 Compiler & Translator
+ * Copyright (c) 2015 Benjamin Kowarsch
+ *
+ * @synopsis
+ *
+ * M2C is a compiler and translator for the classic Modula-2 programming
+ * language as described in the 3rd and 4th editions of Niklaus Wirth's
+ * book "Programming in Modula-2" (PIM) published by Springer Verlag.
+ *
+ * In compiler mode, M2C compiles Modula-2 source via C to object files or
+ * executables using the host system's resident C compiler and linker.
+ * In translator mode, it translates Modula-2 source to C source.
+ *
+ * Further information at http://savannah.nongnu.org/projects/m2c/
+ *
+ * @file
+ *
+ * m2-pathnames.vms.gll
+ *
+ * Grammar of OpenVMS pathnames.
+ *
+ * @license
+ *
+ * M2C is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License (LGPL) version 3
+ * as published by the Free Software Foundation.
+ *
+ * M2C is distributed in the hope that it will be useful,  but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  Read the license for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with m2c.  If not, see <https://www.gnu.org/copyleft/lesser.html>.
+ */
+
+
+grammar Pathnames;
+
+/*** Non-Terminal Symbols ***/
+
+/* Pathname */
+
+pathname :=
+  absolutePath | relativePath | filenameOnly
+  ;
+
+
+/* Absolute Path */
+
+absolutePath :=
+  node? device ( directory filename? | directory? filename )?
+  ;
+
+/* Node */
+
+node :=
+  headComponent '::'
+  ;
+
+/* Device */
+
+device :=
+  headComponent ':' 
+  ;
+
+/* Head Component */
+
+headComponent :=
+  HeadComponentLeadChar HeadComponentChar*
+  ;
+
+/* Directory */
+
+directory :=
+  '[' dirPath ']'
+  ;
+
+
+/* Relative Path */
+
+relativePath :=
+  '[' ( childPath | parentPath )? ']' filename? |
+  '<' ( childPath | parentPath )? '>' filename?
+  ;
+
+/* Child Path */
+
+childPath :=
+  '.' dirPath
+  ;
+
+/* Parent Path */
+
+parentPath :=
+  '-' ( '.' '-' )* ( '.' dirPath )?
+  ;
+
+
+/* Directory Path */
+
+dirPath :=
+  tailComponent ( '.' tailComponent )*
+  ;
+
+
+/* Filename */
+
+filename :=
+  tailComponent ( '.' tailComponent )?
+  ;
+
+
+/* Tail Component */
+
+tailComponent :=
+  TailComponentLeadChar TailComponentChar*
+  ;
+
+
+/*** Terminal Symbols ***/
+
+/* Head Component Character */
+
+HeadComponentChar :=
+  HeadComponentLeadChar | '0' .. '9'
+  ;
+
+/* Head Component Lead Character */
+
+HeadComponentLeadChar :=
+  'a' .. 'z' | 'A' .. 'Z' | '$' | '_'
+  ;
+
+/* Tail Component Character */
+
+TailComponentChar :=
+  ComponentLeadChar | '-'
+  ;
+
+/* Tail Component Lead Character */
+
+TailComponentLeadChar :=
+  'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '$' | '_'
+  ;
+
+endg Pathnames.
+
+/* END OF FILE */
