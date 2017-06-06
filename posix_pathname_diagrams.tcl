@@ -159,11 +159,12 @@ set non_terminals {}
 #   ;
 #
 lappend non_terminals pathname {
-  or {
-    rootPath 
-    {or '~' '.' parentPath } {or rootPath nil}			
+  or 
+    rootPath {
+	or '~' '.' parentPath 
+	}
+	opt rootPath			
     fileNameOnly
-  }
 }
 
 # (2) Root Path
@@ -172,7 +173,7 @@ lappend non_terminals pathname {
 #   '/' ( pathComponent '/' )* pathComponent?
 #   ; 
 lappend non_terminals rootPath {
-  line '/' loop { nil { pathComponent '/' } } {opt pathComponent}
+  line '/' {loop { line pathComponent '/' }  {opt pathComponent}}
 }
 
 # (3) Path Component
@@ -181,7 +182,7 @@ lappend non_terminals rootPath {
 #   '.'? pathSubComponent ( '.' pathSubComponent )*
 #   ; 
 lappend non_terminals pathComponent {
-  line {opt .} pathSubComponent {loop nil {line . pathSubComponent}}
+  line {opt .} pathSubComponent {loop {line . pathSubComponent}}
 }
 
 # (4) Path Sub-Component
@@ -190,7 +191,7 @@ lappend non_terminals pathComponent {
 #   ComponentLeadChar ComponentChar*
 #   ; 
 lappend non_terminals pathSubComponent {
-  line ComponentLeadChar {loop {nil ComponentChar}}
+  line ComponentLeadChar {loop {line ComponentChar}}
 }
 
 # (5) Alternative Path Sub-Component
@@ -200,7 +201,7 @@ lappend non_terminals pathSubComponent {
 #   ; 
 lappend non_terminals pathSubComponent {
   line ComponentLeadChar
-    {loop {nil ComponentChar}} ' '
+    {loop {line ComponentChar}} ' '
     {loop {line ComponentChar}}
 }
 
@@ -210,7 +211,7 @@ lappend non_terminals pathSubComponent {
 #   '..' ( '/' '..' )*
 #   ; 
 lappend non_terminals parentPath {
-  line '..' {loop {nil {line '/' '..' }}}
+  line '..' {loop {line '/' '..' }}
 }
 
 # (7) Filename Only
@@ -257,7 +258,10 @@ lappend terminals AltComponentChar1 {
 #   ComponentLeadChar | '-' | '^'
 #   ;
 lappend terminals AltComponentChar2 {
-  line TO DO
+  or
+    ComponentLeadChar
+	'-'
+	'^'
 }
 
 # (4) Alternative Path Component Character #2
@@ -266,7 +270,11 @@ lappend terminals AltComponentChar2 {
 #   ComponentLeadChar | '-' | '~' | '^'
 #   ;
 lappend terminals AltComponentChar3 {
-  line TO DO
+  or
+    ComponentLeadChar
+	'-'
+	'~'
+	'^'
 }
 
 # (5) Path Component Lead Character
@@ -1329,14 +1337,14 @@ proc draw_all_graphs {} {
   global posix_pathnames
   draw_graphs $non_terminals
   draw_graphs $terminals
-  draw_graphs $res_words
-#  draw_graphs $res_idents
-  draw_graphs $res_symbols
-  draw_graphs $pragmas
-  draw_graphs $ignore_symbols
-  draw_graphs $aliases
-  draw_graphs $legend
-  draw_graphs $posix_pathnames
+  # draw_graphs $res_words
+  #  draw_graphs $res_idents
+  # draw_graphs $res_symbols
+  # draw_graphs $pragmas
+  # draw_graphs $ignore_symbols
+  # draw_graphs $aliases
+  # draw_graphs $legend
+  # draw_graphs $posix_pathnames
 } ;# end draw_all_graphs
 
 
