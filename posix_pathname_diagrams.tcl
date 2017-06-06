@@ -161,9 +161,8 @@ set non_terminals {}
 lappend non_terminals pathname {
   or 
     rootPath {
-	or '~' '.' parentPath 
-	}
-	opt rootPath			
+	line {or ~ . parentPath} {opt rootPath}
+	}			
     fileNameOnly
 }
 
@@ -173,7 +172,7 @@ lappend non_terminals pathname {
 #   '/' ( pathComponent '/' )* pathComponent?
 #   ; 
 lappend non_terminals rootPath {
-  line '/' {loop { line pathComponent '/' }  {opt pathComponent}}
+  line / {loop {} { nil pathComponent / } } {opt pathComponent}
 }
 
 # (3) Path Component
@@ -182,7 +181,7 @@ lappend non_terminals rootPath {
 #   '.'? pathSubComponent ( '.' pathSubComponent )*
 #   ; 
 lappend non_terminals pathComponent {
-  line {opt .} pathSubComponent {loop {line . pathSubComponent}}
+  line {opt .} pathSubComponent {loop {} {nil . pathSubComponent}}
 }
 
 # (4) Path Sub-Component
@@ -191,7 +190,7 @@ lappend non_terminals pathComponent {
 #   ComponentLeadChar ComponentChar*
 #   ; 
 lappend non_terminals pathSubComponent {
-  line ComponentLeadChar {loop {line ComponentChar}}
+  line ComponentLeadChar {loop {} {nil ComponentChar}}
 }
 
 # (5) Alternative Path Sub-Component
@@ -199,9 +198,10 @@ lappend non_terminals pathSubComponent {
 # altPathSubComponent :=
 #   ComponentLeadChar ComponentChar* ( ' ' ComponentChar+ )
 #   ; 
-lappend non_terminals pathSubComponent {
+
+lappend non_terminals altPathSubComponent { #TODO add in ' '
   line ComponentLeadChar
-    {loop {line ComponentChar}} ' '
+    {loop {} {ComponentChar}} 
     {loop {line ComponentChar}}
 }
 
@@ -211,7 +211,7 @@ lappend non_terminals pathSubComponent {
 #   '..' ( '/' '..' )*
 #   ; 
 lappend non_terminals parentPath {
-  line '..' {loop {line '/' '..' }}
+  line .. {loop {} {nil / .. }}
 }
 
 # (7) Filename Only
