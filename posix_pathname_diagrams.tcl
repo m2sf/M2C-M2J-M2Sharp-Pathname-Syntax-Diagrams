@@ -158,7 +158,7 @@ set non_terminals {}
 #   rootPath | ( '~' | '.' | parentPath ) rootPath? | filenameOnly
 #   ;
 #
-lappend non_terminals pathname {
+lappend non_terminals posix_pathname {
   or 
     rootPath {
 	line {or ~ . parentPath} {opt rootPath}
@@ -171,7 +171,7 @@ lappend non_terminals pathname {
 # rootPath :=
 #   '/' ( pathComponent '/' )* pathComponent?
 #   ; 
-lappend non_terminals rootPath {
+lappend non_terminals posix_rootPath {
   line / {loop {} { nil pathComponent / } } {opt pathComponent}
 }
 
@@ -180,7 +180,7 @@ lappend non_terminals rootPath {
 # pathComponent :=
 #   '.'? pathSubComponent ( '.' pathSubComponent )*
 #   ; 
-lappend non_terminals pathComponent {
+lappend non_terminals posix_pathComponent {
   line {opt .} pathSubComponent {loop {} {nil . pathSubComponent}}
 }
 
@@ -189,7 +189,7 @@ lappend non_terminals pathComponent {
 # pathSubComponent :=
 #   ComponentLeadChar ComponentChar*
 #   ; 
-lappend non_terminals pathSubComponent {
+lappend non_terminals posix_pathSubComponent {
   line ComponentLeadChar {loop {} {nil ComponentChar}}
 }
 
@@ -199,10 +199,10 @@ lappend non_terminals pathSubComponent {
 #   ComponentLeadChar ComponentChar* ( ' ' ComponentChar+ )
 #   ; 
 
-lappend non_terminals altPathSubComponent { #TODO add in ' '
+lappend non_terminals posix_altPathSubComponent {
   line ComponentLeadChar
-    {loop {} {ComponentChar}} 
-    {loop {line ComponentChar}}
+    {loop {} {ComponentChar}}
+    {loop {line SPACE ComponentChar}}
 }
 
 # (6) Parent Path
@@ -210,7 +210,7 @@ lappend non_terminals altPathSubComponent { #TODO add in ' '
 # parentPath :=
 #   '..' ( '/' '..' )*
 #   ; 
-lappend non_terminals parentPath {
+lappend non_terminals posix_parentPath {
   line .. {loop {} {nil / .. }}
 }
 
@@ -218,7 +218,7 @@ lappend non_terminals parentPath {
 #
 # alias filenameOnly = pathComponent ;
 # 
-lappend non_terminals filenameOnly {
+lappend non_terminals posix_filenameOnly {
   line pathComponent
 }
 
@@ -234,10 +234,10 @@ set terminals {}
 # ComponentChar :=
 #   ComponentLeadChar | '-'
 #   ;
-lappend terminals ComponentChar {
+lappend terminals posix_ComponentChar {
   or 
     ComponentLeadChar
-    '-'
+    -
 }
 
 # (2) Alternative Path Component Character #1
@@ -245,11 +245,11 @@ lappend terminals ComponentChar {
 # AltComponentChar1 :=
 #   ComponentLeadChar | '-' | '~'
 #   ;
-lappend terminals AltComponentChar1 {
+lappend terminals posix_AltComponentChar1 {
   or 
     ComponentLeadChar
-    '-'
-    '~' 
+    -
+    ~ 
 }
 
 # (3) Alternative Path Component Character #2
@@ -257,11 +257,11 @@ lappend terminals AltComponentChar1 {
 # AltComponentChar2 :=
 #   ComponentLeadChar | '-' | '^'
 #   ;
-lappend terminals AltComponentChar2 {
+lappend terminals posix_AltComponentChar2 {
   or
     ComponentLeadChar
-	'-'
-	'^'
+	-
+	^
 }
 
 # (4) Alternative Path Component Character #2
@@ -269,12 +269,12 @@ lappend terminals AltComponentChar2 {
 # AltComponentChar3 :=
 #   ComponentLeadChar | '-' | '~' | '^'
 #   ;
-lappend terminals AltComponentChar3 {
+lappend terminals posix_AltComponentChar3 {
   or
     ComponentLeadChar
-	'-'
-	'~'
-	'^'
+	-
+	~
+	^
 }
 
 # (5) Path Component Lead Character
@@ -282,12 +282,12 @@ lappend terminals AltComponentChar3 {
 # ComponentLeadChar :=
 #   'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_'
 #   ;
-lappend terminals ComponentLeadChar {
+lappend terminals posix_ComponentLeadChar {
   or
-    'a..z'
-    'A..Z'
-    '0..9'
-    '_'
+    a..z
+    A..Z
+    0..9
+    _
 }
 
 
