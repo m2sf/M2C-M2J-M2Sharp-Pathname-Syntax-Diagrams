@@ -195,49 +195,25 @@ lappend non_terminals win_rootPath {
 line  BACKSLASH  {loop {} { nil pathComponent BACKSLASH }} {opt pathComponent}
 }
 
-# (5) Path Component
+# (5) Parent Path
 #
-# pathComponent :=
-#   pathSubComponent
-#   ( '.' pathSubComponent )?
+# parentPath :=
+#   '..' ( '\' '..' )*
 #   ; 
-lappend non_terminals win_pathComponent {
-
-  line pathSubComponent { opt . pathSubComponent }
+lappend non_terminals win_parentPath {
+  line .. {loop {} {nil BACKSLASH .. }}
 }
 
 # (6) Path Component
 #
 # pathComponent :=
-#   '.'? pathSubComponent
-#   ( '.' pathSubComponent )?
+#   '.'? pathSubComponent ( '.' pathSubComponent )*
 #   ; 
-lappend non_terminals win_altPathComponent1 {
-  line {opt .} pathSubComponent { opt . pathSubComponent }
+lappend non_terminals win_PathComponent {
+  line {opt .} pathSubComponent {loop {} {line . pathSubComponent}}
 }
 
-# (7) Path Component
-#
-# pathComponent :=
-#   pathSubComponent
-#   ( '.' pathSubComponent ( '.' pathSubComponent )* )?
-#   ; 
-lappend non_terminals win_altPathComponent2 {
-  line pathSubComponent { opt . pathSubComponent  {loop {} {nil . pathSubComponent} } }
-}
-
-# (8) Path Component
-#
-# pathComponent :=
-#   '.'? pathSubComponent
-#   ( '.' pathSubComponent ( '.' pathSubComponent )* )?
-#   ; 
-lappend non_terminals win_altPathComponent3 {
-  line {opt .} pathSubComponent 
-  { opt . pathSubComponent  {loop {} {nil . pathSubComponent} } }
-}
-
-# (9) Path Sub-Component
+# (7) Path Sub-Component
 #
 # pathSubComponent :=
 #   ComponentLeadChar ComponentChar* ( ' ' ComponentChar+ )*
@@ -247,28 +223,7 @@ lappend non_terminals win_pathSubComponent {
   {loop {} {nil SPACE {loop {ComponentChar} } } }
 }
 
-# (10) Parent Path
-#
-# parentPath :=
-#   '..' ( '\' '..' )*
-#   ; 
-lappend non_terminals win_parentPath {
-  line .. {loop {} {nil BACKSLASH .. }}
-}
-
-# (11) Reserved Path Component
-#
-# 'AUX' | 'CON' | 'NUL' | ( 'COM' | 'LPT' ) ( '0' .. '9' );
-# 
-lappend non_terminals win_reservedPathComponent {
-  or 
-    AUX
-	CON
-	NUL
-	{ line {or COM LPT} 0..9 }
-}
-
-# (12) Filename Only
+# (8) Filename Only
 #
 # alias filenameOnly = pathComponent ;
 # 
@@ -295,8 +250,20 @@ lappend terminals win_ComponentChar {
     ~
 }
 
+# (2) Alternative Path Component Character
+#
+# AltComponentChar :=
+#   ComponentLeadChar | '-' | '~'
+#   ;
+lappend terminals win_AltComponentChar {
+  or 
+    ComponentLeadChar
+    -
+    ~
+	^
+}
 
-# (2) Path Component Lead Character
+# (3) Path Component Lead Character
 #
 # ComponentLeadChar :=
 #   'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_'

@@ -201,7 +201,7 @@ lappend non_terminals vms_device {
 #   HeadComponentLeadChar HeadComponentChar*
 #   ; 
 lappend non_terminals vms_headComponent {
-  line HeadComponentLeadChar loop {} {HeadComponentChar}
+  line HeadComponentLeadChar {loop {} {HeadComponentChar}}
 }
 
 # (6) Directory
@@ -248,7 +248,7 @@ lappend non_terminals vms_parentPath {
 #   tailComponent ( '.' tailComponent )*
 #   ; 
 lappend non_terminals vms_dirPath { 
-  line tailComponent loop {} {line . tailComponent}
+  line tailComponent {loop {} {line . tailComponent}}
 }
 
 # (11) Filename
@@ -266,7 +266,7 @@ lappend non_terminals vms_filename {
 #  TailComponentLeadChar TailComponentChar*
 # 
 lappend non_terminals vms_tailComponent {
- line TailComponentLeadChar loop {} {TailComponentChar}
+ line TailComponentLeadChar {loop {} {TailComponentChar}}
 }
 
 
