@@ -161,7 +161,7 @@ set non_terminals {}
 lappend non_terminals posix_pathname {
   or 
     rootPath {
-	line {or ~ . parentPath} {opt rootPath}
+	  line {or ~ . parentPath} {optx rootPath}
 	}			
     fileNameOnly
 }
@@ -172,7 +172,7 @@ lappend non_terminals posix_pathname {
 #   '/' ( pathComponent '/' )* pathComponent?
 #   ; 
 lappend non_terminals posix_rootPath {
-  line / {loop {} { nil pathComponent / } } {opt pathComponent}
+  line / {loop nil {nil pathComponent /}} {optx pathComponent}
 }
 
 # (3) Path Component
@@ -181,7 +181,7 @@ lappend non_terminals posix_rootPath {
 #   '.'? pathSubComponent ( '.' pathSubComponent )*
 #   ; 
 lappend non_terminals posix_pathComponent {
-  line {opt .} pathSubComponent {loop {} {nil . pathSubComponent}}
+  line {optx .} pathSubComponent {loop nil {nil . pathSubComponent}}
 }
 
 # (4) Path Sub-Component
@@ -190,7 +190,7 @@ lappend non_terminals posix_pathComponent {
 #   ComponentLeadChar ComponentChar*
 #   ; 
 lappend non_terminals posix_pathSubComponent {
-  line ComponentLeadChar {loop {} {nil ComponentChar}}
+  line ComponentLeadChar {loop nil {nil ComponentChar}}
 }
 
 # (5) Alternative Path Sub-Component
@@ -201,8 +201,8 @@ lappend non_terminals posix_pathSubComponent {
 
 lappend non_terminals posix_altPathSubComponent {
   line ComponentLeadChar
-    {loop {} {ComponentChar}}
-    {loop {line SPACE ComponentChar}}
+    {loop nil {ComponentChar}}
+    {loop {line Whitespace ComponentChar}}
 }
 
 # (6) Parent Path
@@ -211,7 +211,7 @@ lappend non_terminals posix_altPathSubComponent {
 #   '..' ( '/' '..' )*
 #   ; 
 lappend non_terminals posix_parentPath {
-  line .. {loop {} {nil / .. }}
+  line .. {loop nil {nil / ..}}
 }
 
 # (7) Filename Only
