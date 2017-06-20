@@ -193,16 +193,15 @@ lappend non_terminals posix_pathSubComponent {
   line ComponentLeadChar {loop nil {nil ComponentChar}}
 }
 
-# (5) Alternative Path Sub-Component
+# (5a) Alternative Path Sub-Component
 #
 # altPathSubComponent :=
-#   ComponentLeadChar ComponentChar* ( ' ' ComponentChar+ )
-#   ; 
-
+#   ComponentLeadChar ComponentChar* ( ' ' ComponentChar+ )*
+#   ;
 lappend non_terminals posix_altPathSubComponent {
   line ComponentLeadChar
-    {loop nil {ComponentChar}}
-    {loop {line Whitespace ComponentChar}}
+    {loop nil ComponentChar}
+    {loop nil {nil Space {loop ComponentChar nil}}}
 }
 
 # (6) Parent Path
