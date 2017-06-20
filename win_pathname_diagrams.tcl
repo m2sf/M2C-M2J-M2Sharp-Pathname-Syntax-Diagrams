@@ -162,7 +162,7 @@ set non_terminals {}
 lappend non_terminals win_pathname {
   or 
     {line {or server device} rootPath}
-	{line {or . parentPath} {opt rootPath}}			
+	{line {or . parentPath} {optx rootPath}}			
     fileNameOnly
 }
 
@@ -192,7 +192,7 @@ lappend non_terminals win_device {
 #   '\' ( pathComponent '\' )* pathComponent?
 #   ; 
 lappend non_terminals win_rootPath {
-line  BACKSLASH  {loop {} { nil pathComponent BACKSLASH }} {opt pathComponent}
+line  BACKSLASH  {loop {} { nil pathComponent BACKSLASH }} {optx pathComponent}
 }
 
 # (5) Parent Path
@@ -210,7 +210,7 @@ lappend non_terminals win_parentPath {
 #   '.'? pathSubComponent ( '.' pathSubComponent )*
 #   ; 
 lappend non_terminals win_PathComponent {
-  line {opt .} pathSubComponent {loop {} {line . pathSubComponent}}
+  line {optx .} pathSubComponent {loop {} {line . pathSubComponent}}
 }
 
 # (7) Path Sub-Component

@@ -150,7 +150,7 @@ wm withdraw .
 # Non-Terminal Symbols
 # ---------------------------------------------------------------------------
 #
-set non_terminals {}
+set vms_non_terminals {}
 
 # (1) Old Pathname
 #
@@ -171,10 +171,10 @@ lappend non_terminals vms_pathname {
 #   node? device ( directory filename? | directory? filename )?
 #   ; 
 lappend non_terminals vms_absolutePath {
-  line {opt node} device { opt
+  line {optx node} device { opt
   or {
-	line directory {opt filename} } {
-	line {opt directory} filename } }
+	line directory {optx filename} } {
+	line {optx directory} filename } }
 }
 
 # (3) Node
@@ -221,8 +221,8 @@ lappend non_terminals vms_directory {
 #   ; 
 lappend non_terminals vms_relativePath {
   or
-	{line [ {opt {or childPath parentPath } } ] {opt filename }}
-	{line < {opt {or childPath parentPath } } > {opt filename }}
+	{line [ {optx {or childPath parentPath } } ] {optx filename }}
+	{line < {optx {or childPath parentPath } } > {optx filename }}
 }
 
 # (8) Child Path
@@ -240,7 +240,7 @@ lappend non_terminals vms_childPath {
 #   '-' ( '.' '-' )* ( '.' dirPath )?
 #   ; 
 lappend non_terminals vms_parentPath {
-  line - loop {} {line . - } {opt . dirPath}
+  line - loop {} {line . - } {optx . dirPath}
 }
 
 # (10) Directory
@@ -248,7 +248,7 @@ lappend non_terminals vms_parentPath {
 #   tailComponent ( '.' tailComponent )*
 #   ; 
 lappend non_terminals vms_dirPath { 
-  line tailComponent {loop {} {line . tailComponent}}
+  line tailComponent {loop {} {nil . tailComponent}}
 }
 
 # (11) Filename
@@ -256,7 +256,7 @@ lappend non_terminals vms_dirPath {
 #   pathComponent ( '.' pathComponent )?
 # 
 lappend non_terminals vms_filename {
-  line pathComponent {opt . pathComponent}
+  line pathComponent {optx . pathComponent}
 }
 
 
@@ -274,7 +274,7 @@ lappend non_terminals vms_tailComponent {
 # Terminal Symbols
 # ---------------------------------------------------------------------------
 #
-set terminals {}
+set vms_terminals {}
 
 # (1) Head Component Character
 #
@@ -324,33 +324,6 @@ lappend terminals vms_TailComponentLeadChar {
 	$
     _
 }
-
-
-# ---------------------------------------------------------------------------
-# Ignore Symbols
-# ---------------------------------------------------------------------------
-#
-set ignore_symbols {}
-
-# NONE
-
-
-# ---------------------------------------------------------------------------
-# Pragmas
-# ---------------------------------------------------------------------------
-#
-set pragmas {}
-
-# NONE
-
-
-# ---------------------------------------------------------------------------
-# Alias Diagrams
-# ---------------------------------------------------------------------------
-#
-set aliases {}
-
-# NONE
 
 
 # ---------------------------------------------------------------------------
@@ -473,7 +446,6 @@ lappend legend legendNonTerminal {
 # ===========================================================================
 #
 
-
 # ---------------------------------------------------------------------------
 # Draw the button box
 # ---------------------------------------------------------------------------
@@ -556,6 +528,8 @@ incr bn
 set b .bb.b$bn
 button $b -text "Quit" -command {exit}
 pack $b -side top -fill x -expand 0 -pady {0 14}
+
+
 
 
 # ---------------------------------------------------------------------------

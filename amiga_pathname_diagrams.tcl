@@ -172,7 +172,7 @@ lappend non_terminals amiga_pathname {
 #   devname? ':' relativePath
 #   ; 
 lappend non_terminals amiga_rootPath {
-  line {opt devname} : relativePath
+  line {optx devname} : relativePath
 }
 
 # (3) Device Name
@@ -200,7 +200,7 @@ lappend non_terminals amiga_parentPath {
 #   ( pathComponent '/' )* pathComponent?
 #   ; 
 lappend non_terminals amiga_relativePath {
-  line {loop {} {pathComponent BACKSLASH}} {opt pathComponent}
+  line {loop {} {pathComponent BACKSLASH}} {optx pathComponent}
 }
   
 # (6) Path Component
@@ -209,7 +209,7 @@ lappend non_terminals amiga_relativePath {
 #   '.'? pathSubComponent ( '.' pathSubComponent )*
 #   ; 
 lappend non_terminals amiga_pathComponent {
-  line {opt .} pathSubComponent {loop {} {nil . pathSubComponent}}
+  line {optx .} pathSubComponent {loop {} {nil . pathSubComponent}}
 }
 
 # (7) Path Sub-Component
