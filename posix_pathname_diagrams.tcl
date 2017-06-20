@@ -172,7 +172,7 @@ lappend non_terminals posix_pathname {
 #   '/' ( pathComponent '/' )* pathComponent?
 #   ; 
 lappend non_terminals posix_rootPath {
-  line / {loop nil {nil pathComponent /}} {optx pathComponent}
+  line {loop / pathComponent} {optx pathComponent}
 }
 
 # (3) Path Component
