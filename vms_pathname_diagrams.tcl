@@ -171,10 +171,10 @@ lappend non_terminals vms_pathname {
 #   node? device ( directory filename? | directory? filename )?
 #   ; 
 lappend non_terminals vms_absolutePath {
-  line {optx node} device { opt
+  line {optx node} device { optx {
   or {
 	line directory {optx filename} } {
-	line {optx directory} filename } }
+	line {optx directory} filename } } }
 }
 
 # (3) Node
@@ -189,7 +189,7 @@ lappend non_terminals vms_node {
 # (4) Device
 #
 # device :=
-#   headComponent ':' 
+#   headComponent ':'  
 #   ; 
 lappend non_terminals vms_device {
   line headComponent :
@@ -240,7 +240,7 @@ lappend non_terminals vms_childPath {
 #   '-' ( '.' '-' )* ( '.' dirPath )?
 #   ; 
 lappend non_terminals vms_parentPath {
-  line - loop {} {line . - } {optx . dirPath}
+  line - {loop {} {nil . - }} {optx . dirPath}
 }
 
 # (10) Directory

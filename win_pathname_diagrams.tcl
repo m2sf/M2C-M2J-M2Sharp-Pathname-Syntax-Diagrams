@@ -182,7 +182,7 @@ lappend non_terminals win_server {
 #   ( 'a' .. 'z' | 'A' .. 'Z' ) ':'
 #   ; 
 lappend non_terminals win_device {
-  line {or 'a..z' 'A..Z'} :
+  line {or a..z A..Z} :
 }
 
 
@@ -201,7 +201,7 @@ line  BACKSLASH  {loop {} { nil pathComponent BACKSLASH }} {optx pathComponent}
 #   '..' ( '\' '..' )*
 #   ; 
 lappend non_terminals win_parentPath {
-  line .. {loop {} {nil BACKSLASH .. }}
+  loop {..} {nil BACKSLASH}
 }
 
 # (6) Path Component
@@ -210,7 +210,7 @@ lappend non_terminals win_parentPath {
 #   '.'? pathSubComponent ( '.' pathSubComponent )*
 #   ; 
 lappend non_terminals win_PathComponent {
-  line {optx .} pathSubComponent {loop {} {line . pathSubComponent}}
+  line {optx .} pathSubComponent {loop {} {nil . pathSubComponent}}
 }
 
 # (7) Path Sub-Component
@@ -220,7 +220,7 @@ lappend non_terminals win_PathComponent {
 #   ; 
 lappend non_terminals win_pathSubComponent {
   line ComponentLeadChar {loop {} {nil ComponentChar}} 
-  {loop {} {nil SPACE {loop {ComponentChar} } } }
+  {loop {} {nil Space {loop {ComponentChar} } } }
 }
 
 # (8) Filename Only

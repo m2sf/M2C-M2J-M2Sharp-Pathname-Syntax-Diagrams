@@ -182,7 +182,7 @@ lappend non_terminals amiga_rootPath {
 #   ; 
 lappend non_terminals amiga_device {
   line Letter {loop {} {ComponentChar}} 
-	{loop {} {SPACE {loop {ComponentChar}}}}
+	{loop {} {Space {loop {ComponentChar}}}}
 }
 
 # (4) Parent Path
@@ -219,7 +219,7 @@ lappend non_terminals amiga_pathComponent {
 #   ; 
 lappend non_terminals amiga_pathSubComponent {
   line ComponentLeadChar {loop {} {nil ComponentChar}} 
-  {loop {} {nil SPACE {loop {ComponentChar} } } }
+  {loop {} {nil Space {loop {ComponentChar} } } }
 }
 
 # (8) Filename Only
@@ -292,9 +292,8 @@ lappend terminals amiga_AltComponentChar3 {
 #   ;
 lappend terminals amiga_ComponentLeadChar {
   or
-    a..z
-    A..Z
-    0..9
+    Letter
+    Digit
     _
 }
 
@@ -304,7 +303,7 @@ lappend terminals amiga_ComponentLeadChar {
 #   '0' .. '9'
 #   ;
 lappend terminals amiga_Digit {
-  0..9
+  line 0..9
 }
 
 # (7) Letter
